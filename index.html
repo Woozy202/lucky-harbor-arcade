@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -623,5 +623,952 @@
     updateCoins();
     displayScores();
   </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lucky Harbor Arcade</title>
+
+  <style>
+    :root {
+      --navy: #081526;
+      --blue: #102a49;
+      --light-blue: #1c4772;
+      --gold: #f4c95d;
+      --white: #f5f7fb;
+      --muted: #b5c3d5;
+      --green: #70d6a1;
+    }
+
+    * {
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: var(--white);
+      background:
+        radial-gradient(circle at top, #19436e, var(--navy) 60%);
+      min-height: 100vh;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 6%;
+      background: rgba(8, 21, 38, .95);
+      border-bottom: 1px solid rgba(255,255,255,.15);
+    }
+
+    .logo {
+      color: var(--gold);
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    nav a {
+      margin: 0 8px;
+      color: var(--white);
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    nav a:hover {
+      color: var(--gold);
+    }
+
+    .coins {
+      color: var(--gold);
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    main {
+      width: 92%;
+      max-width: 1050px;
+      margin: auto;
+      padding-bottom: 50px;
+    }
+
+    .hero {
+      padding: 70px 10px 50px;
+      text-align: center;
+    }
+
+    .badge {
+      color: var(--green);
+      font-size: 13px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      color: var(--gold);
+      font-size: clamp(38px, 8vw, 72px);
+      margin: 12px 0;
+    }
+
+    .hero p {
+      max-width: 650px;
+      margin: auto;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    section {
+      scroll-margin-top: 90px;
+      margin-bottom: 28px;
+    }
+
+    .section-title {
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .games {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      padding: 25px;
+      background: rgba(16, 42, 73, .94);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 18px;
+      box-shadow: 0 12px 35px rgba(0,0,0,.18);
+    }
+
+    .card h3 {
+      color: var(--gold);
+      margin-top: 0;
+    }
+
+    .reels {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 22px 0;
+    }
+
+    .reel {
+      width: 72px;
+      height: 72px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: white;
+      color: #111;
+      font-size: 36px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 25px;
+      padding: 12px 20px;
+      margin: 5px;
+      background: var(--gold);
+      color: #111;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #ffe28b;
+      transform: translateY(-1px);
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: .5;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 6px 0;
+      border: 0;
+      border-radius: 8px;
+      font: inherit;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .message {
+      min-height: 25px;
+      color: var(--muted);
+    }
+
+    ol {
+      color: var(--gold);
+      line-height: 1.8;
+    }
+
+    .about-text,
+    .legal-text {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .warning {
+      padding: 15px;
+      border-left: 4px solid var(--gold);
+      background: rgba(244, 201, 93, .1);
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    footer {
+      padding: 30px 15px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      border-top: 1px solid rgba(255,255,255,.12);
+    }
+
+    @media (max-width: 700px) {
+      header {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      nav {
+        order: 3;
+        width: 100%;
+        text-align: center;
+      }
+
+      nav a {
+        display: inline-block;
+        margin: 5px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo">⚓ Lucky Harbor</div>
+
+    <nav>
+      <a href="#games">Games</a>
+      <a href="#leaderboard">Scores</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <div class="coins">🪙 <span id="coinBalance">100</span></div>
+  </header>
+
+  <main>
+    <div class="hero">
+      <div class="badge">Free-to-play arcade entertainment</div>
+      <h1>Lucky Harbor</h1>
+      <p>
+        Take a break, play casual games, collect fictional coins,
+        and climb the local leaderboard.
+      </p>
+    </div>
+
+    <section id="games">
+      <h2 class="section-title">🎮 Games</h2>
+
+      <div class="games">
+        <div class="card">
+          <h3>🎰 Harbor Slots</h3>
+          <p>Spin for 10 fictional coins.</p>
+
+          <div class="reels">
+            <div class="reel" id="reel1">🍒</div>
+            <div class="reel" id="reel2">⭐</div>
+            <div class="reel" id="reel3">🔔</div>
+          </div>
+
+          <button id="spinButton">Spin</button>
+          <p class="message" id="slotMessage"></p>
+        </div>
+
+        <div class="card">
+          <h3>🪙 Coin Flip</h3>
+          <p>Choose heads or tails for 5 fictional coins.</p>
+
+          <button onclick="flipCoin('Heads')">Heads</button>
+          <button onclick="flipCoin('Tails')">Tails</button>
+
+          <p class="message" id="flipMessage"></p>
+        </div>
+
+        <div class="card">
+          <h3>🎁 Daily Bonus</h3>
+          <p>Return once per day for 50 fictional coins.</p>
+
+          <button onclick="claimBonus()">Claim Bonus</button>
+          <p class="message" id="bonusMessage"></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="leaderboard">
+      <h2 class="section-title">🏆 Leaderboard</h2>
+
+      <div class="card">
+        <p>Save your score on this browser.</p>
+        <input id="playerName" placeholder="Enter your name">
+        <button onclick="saveScore()">Save Score</button>
+        <ol id="scoreList"></ol>
+      </div>
+    </section>
+
+    <section id="about">
+      <h2 class="section-title">⚓ About Lucky Harbor</h2>
+
+      <div class="card about-text">
+        Lucky Harbor is a casual entertainment arcade made for relaxing,
+        collecting fictional coins, and enjoying simple games.
+        It is not a gambling service and does not offer money or prizes.
+      </div>
+    </section>
+
+    <section id="contact">
+      <h2 class="section-title">✉️ Contact</h2>
+
+      <div class="card">
+        <input id="contactName" placeholder="Your name">
+        <input id="contactEmail" type="email" placeholder="Your email">
+        <textarea id="contactMessage" placeholder="Your message"></textarea>
+        <button onclick="sendMessage()">Send Message</button>
+        <p class="message" id="contactStatus"></p>
+      </div>
+    </section>
+
+    <section>
+      <div class="warning">
+        <strong>Play-money notice:</strong>
+        Lucky Harbor uses fictional coins only. Coins cannot be purchased,
+        withdrawn, exchanged, or redeemed for anything of value.
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © 2026 Lucky Harbor Arcade · Entertainment only · Play responsibly
+  </footer>
+
+  <script>
+    const symbols = ["🍒", "🍋", "⭐", "🔔", "💎", "7️⃣"];
+    let coins = Number(localStorage.getItem("coins")) || 100;
+
+    function updateCoins() {
+      document.getElementById("coinBalance").textContent = coins;
+      localStorage.setItem("coins", coins);
+    }
+
+    function randomSymbol() {
+      return symbols[Math.floor(Math.random() * symbols.length)];
+    }
+
+    document.getElementById("spinButton").onclick = function () {
+      if (coins < 10) {
+        document.getElementById("slotMessage").textContent =
+          "You need 10 fictional coins.";
+        return;
+      }
+
+      coins -= 10;
+
+      const a = randomSymbol();
+      const b = randomSymbol();
+      const c = randomSymbol();
+
+      document.getElementById("reel1").textContent = a;
+      document.getElementById("reel2").textContent = b;
+      document.getElementById("reel3").textContent = c;
+
+      if (a === b && b === c) {
+        coins += 100;
+        document.getElementById("slotMessage").textContent =
+          "Jackpot! You earned 100 fictional coins.";
+      } else if (a === b || a === c || b === c) {
+        coins += 25;
+        document.getElementById("slotMessage").textContent =
+          "Nice match! You earned 25 fictional coins.";
+      } else {
+        document.getElementById("slotMessage").textContent =
+          "No match this time.";
+      }
+
+      updateCoins();
+    };
+
+    function flipCoin(choice) {
+      if (coins < 5) {
+        document.getElementById("flipMessage").textContent =
+          "You need 5 fictional coins.";
+        return;
+      }
+
+      coins -= 5;
+
+      const result = Math.random() < 0.5 ? "Heads" : "Tails";
+
+      if (choice === result) {
+        coins += 10;
+        document.getElementById("flipMessage").textContent =
+          "It was " + result + "! You earned 10 coins.";
+      } else {
+        document.getElementById("flipMessage").textContent =
+          "It was " + result + ". Try again.";
+      }
+
+      updateCoins();
+    }
+
+    function claimBonus() {
+      const today = new Date().toDateString();
+
+      if (localStorage.getItem("lastBonus") === today) {
+        document.getElementById("bonusMessage").textContent =
+          "You already claimed today's bonus.";
+        return;
+      }
+
+      coins += 50;
+      localStorage.setItem("lastBonus", today);
+
+      document.getElementById("bonusMessage").textContent =
+        "You received 50 fictional coins!";
+      updateCoins();
+    }
+
+    function saveScore() {
+      const name = document.getElementById("playerName").value.trim();
+
+      if (!name) {
+        alert("Enter your name first.");
+        return;
+      }
+
+      let scores = JSON.parse(localStorage.getItem("scores")) || [];
+
+      scores.push({ name: name, coins: coins });
+      scores.sort((a, b) => b.coins - a.coins);
+      scores = scores.slice(0, 10);
+
+      localStorage.setItem("scores", JSON.stringify(scores));
+      displayScores();
+    }
+
+    function displayScores() {
+      const scores = JSON.parse(localStorage.getItem("scores")) || [];
+      const list = document.getElementById("scoreList");
+
+      list.innerHTML = "";
+
+      scores.forEach(score => {
+        const item = document.createElement("li");
+        item.textContent = score.name + " — " + score.coins + " coins";
+        list.appendChild(item);
+      });
+    }
+
+    function sendMessage() {
+      const name = document.getElementById("contactName").value.trim();
+      const email = document.getElementById("contactEmail").value.trim();
+      const message = document.getElementById("contactMessage").value.trim();
+
+      if (!name || !email || !message) {
+        document.getElementById("contactStatus").textContent =
+          "Please complete all fields.";
+        return;
+      }
+
+      document.getElementById("contactStatus").textContent =
+        "Thanks! The demo form received your message.";
+    }
+
+    updateCoins();
+    displayScores();
+  </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lucky Harbor Arcade</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: white;
+      background: #071321;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 7%;
+      background: #102a49;
+      border-bottom: 1px solid #315477;
+    }
+
+    .logo {
+      color: #f4c95d;
+      font-weight: bold;
+      font-size: 21px;
+    }
+
+    nav a {
+      margin: 0 8px;
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    nav a:hover {
+      color: #f4c95d;
+    }
+
+    .coins {
+      color: #f4c95d;
+      font-weight: bold;
+    }
+
+    main {
+      width: 92%;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .hero {
+      padding: 70px 10px 45px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      margin: 0;
+      color: #f4c95d;
+      font-size: clamp(38px, 7vw, 68px);
+    }
+
+    .hero p {
+      max-width: 600px;
+      margin: 15px auto;
+      color: #b7c7d9;
+      line-height: 1.6;
+    }
+
+    .section {
+      padding: 45px 0;
+      scroll-margin-top: 80px;
+    }
+
+    .section h2 {
+      margin-bottom: 20px;
+      color: #f4c95d;
+      text-align: center;
+    }
+
+    .games {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      padding: 25px;
+      text-align: center;
+      background: #102a49;
+      border: 1px solid #315477;
+      border-radius: 18px;
+    }
+
+    .card h3 {
+      color: #f4c95d;
+    }
+
+    .reels {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 22px 0;
+    }
+
+    .reel {
+      display: grid;
+      place-items: center;
+      width: 75px;
+      height: 75px;
+      border-radius: 12px;
+      background: white;
+      color: #111;
+      font-size: 38px;
+    }
+
+    .spinning {
+      animation: shake .12s infinite;
+    }
+
+    @keyframes shake {
+      0% { transform: rotate(-4deg); }
+      50% { transform: rotate(4deg); }
+      100% { transform: rotate(-4deg); }
+    }
+
+    button {
+      margin: 5px;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 25px;
+      background: #f4c95d;
+      color: #111;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #ffe28b;
+    }
+
+    button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    input {
+      width: 80%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      margin: 5px;
+    }
+
+    .result {
+      min-height: 25px;
+      color: #b7c7d9;
+    }
+
+    .text-box {
+      max-width: 700px;
+      margin: auto;
+      padding: 25px;
+      color: #c7d3e0;
+      background: #102a49;
+      border-radius: 18px;
+      line-height: 1.7;
+    }
+
+    ol {
+      max-width: 300px;
+      margin: auto;
+      text-align: left;
+      color: #f4c95d;
+      line-height: 1.8;
+    }
+
+    footer {
+      padding: 30px;
+      color: #91a4bd;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    @media (max-width: 700px) {
+      header {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      nav {
+        order: 3;
+        width: 100%;
+        text-align: center;
+      }
+
+      nav a {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">⚓ Lucky Harbor</div>
+
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#games">Games</a>
+      <a href="#about">About</a>
+      <a href="#responsible">Responsible Play</a>
+    </nav>
+
+    <div class="coins">🪙 <span id="coinBalance">100</span></div>
+  </header>
+
+  <main>
+
+    <section class="hero" id="home">
+      <h1>Lucky Harbor Arcade</h1>
+      <p>
+        A casual, free-to-play arcade experience with fictional coins,
+        daily bonuses, and friendly competition.
+      </p>
+      <button onclick="document.getElementById('games').scrollIntoView()">
+        Explore Games
+      </button>
+    </section>
+
+    <section class="section" id="games">
+      <h2>🎮 Games</h2>
+
+      <div class="games">
+
+        <div class="card">
+          <h3>🎰 Harbor Slots</h3>
+          <p>Spin for 10 fictional coins.</p>
+
+          <div class="reels">
+            <div class="reel" id="reel1">🍒</div>
+            <div class="reel" id="reel2">⭐</div>
+            <div class="reel" id="reel3">🔔</div>
+          </div>
+
+          <button id="spinButton">Spin</button>
+          <p class="result" id="slotMessage"></p>
+        </div>
+
+        <div class="card">
+          <h3>🪙 Coin Flip</h3>
+          <p>Choose heads or tails for 5 fictional coins.</p>
+
+          <button onclick="flipCoin('Heads')">Heads</button>
+          <button onclick="flipCoin('Tails')">Tails</button>
+
+          <p class="result" id="flipMessage"></p>
+        </div>
+
+        <div class="card">
+          <h3>🎁 Daily Bonus</h3>
+          <p>Return once per day for 50 fictional coins.</p>
+
+          <button onclick="claimBonus()">Claim Bonus</button>
+          <p class="result" id="bonusMessage"></p>
+        </div>
+
+        <div class="card">
+          <h3>🏆 Leaderboard</h3>
+
+          <input id="playerName" placeholder="Enter your name">
+          <br>
+          <button onclick="saveScore()">Save Score</button>
+
+          <ol id="leaderboard"></ol>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <h2>⚓ About Lucky Harbor</h2>
+
+      <div class="text-box">
+        Lucky Harbor is a free entertainment arcade created for casual
+        gameplay and friendly competition. Players use fictional coins to
+        interact with games and track their scores.
+
+        <br><br>
+
+        Coins are not money, cannot be purchased, cannot be traded, and
+        cannot be exchanged for prizes or anything of value.
+      </div>
+    </section>
+
+    <section class="section" id="responsible">
+      <h2>🛟 Responsible Play</h2>
+
+      <div class="text-box">
+        Lucky Harbor is designed for entertainment only.
+
+        <br><br>
+
+        Take breaks, play casually, and stop if the experience is no longer
+        enjoyable. There are no real-money bets, deposits, withdrawals, or
+        cash prizes on this website.
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    © 2026 Lucky Harbor Arcade · Play money only · No cash value
+  </footer>
+
+  <script>
+    const symbols = ["🍒", "🍋", "⭐", "🔔", "💎", "7️⃣"];
+    let coins = Number(localStorage.getItem("coins")) || 100;
+
+    function updateCoins() {
+      document.getElementById("coinBalance").textContent = coins;
+      localStorage.setItem("coins", coins);
+    }
+
+    function randomSymbol() {
+      return symbols[Math.floor(Math.random() * symbols.length)];
+    }
+
+    document.getElementById("spinButton").onclick = function () {
+      if (coins < 10) {
+        document.getElementById("slotMessage").textContent =
+          "You need 10 fictional coins.";
+        return;
+      }
+
+      coins -= 10;
+
+      const reels = [
+        document.getElementById("reel1"),
+        document.getElementById("reel2"),
+        document.getElementById("reel3")
+      ];
+
+      reels.forEach(reel => reel.classList.add("spinning"));
+
+      setTimeout(() => {
+        const a = randomSymbol();
+        const b = randomSymbol();
+        const c = randomSymbol();
+
+        reels[0].textContent = a;
+        reels[1].textContent = b;
+        reels[2].textContent = c;
+
+        reels.forEach(reel => reel.classList.remove("spinning"));
+
+        if (a === b && b === c) {
+          coins += 100;
+          document.getElementById("slotMessage").textContent =
+            "Jackpot! You earned 100 fictional coins.";
+        } else if (a === b || a === c || b === c) {
+          coins += 25;
+          document.getElementById("slotMessage").textContent =
+            "Nice match! You earned 25 fictional coins.";
+        } else {
+          document.getElementById("slotMessage").textContent =
+            "No match this time.";
+        }
+
+        updateCoins();
+      }, 700);
+    };
+
+    function flipCoin(choice) {
+      if (coins < 5) {
+        document.getElementById("flipMessage").textContent =
+          "You need 5 fictional coins.";
+        return;
+      }
+
+      coins -= 5;
+
+      const result = Math.random() < 0.5 ? "Heads" : "Tails";
+
+      if (choice === result) {
+        coins += 10;
+        document.getElementById("flipMessage").textContent =
+          "It was " + result + "! You earned 10 fictional coins.";
+      } else {
+        document.getElementById("flipMessage").textContent =
+          "It was " + result + ". Try again.";
+      }
+
+      updateCoins();
+    }
+
+    function claimBonus() {
+      const today = new Date().toDateString();
+      const lastBonus = localStorage.getItem("lastBonus");
+
+      if (lastBonus === today) {
+        document.getElementById("bonusMessage").textContent =
+          "You already claimed today's bonus.";
+        return;
+      }
+
+      coins += 50;
+      localStorage.setItem("lastBonus", today);
+
+      document.getElementById("bonusMessage").textContent =
+        "You received 50 fictional coins!";
+
+      updateCoins();
+    }
+
+    function saveScore() {
+      const name = document.getElementById("playerName").value.trim();
+
+      if (!name) {
+        alert("Enter your name first.");
+        return;
+      }
+
+      let scores = JSON.parse(localStorage.getItem("scores")) || [];
+
+      scores.push({
+        name: name,
+        coins: coins
+      });
+
+      scores.sort((a, b) => b.coins - a.coins);
+      scores = scores.slice(0, 10);
+
+      localStorage.setItem("scores", JSON.stringify(scores));
+      displayScores();
+    }
+
+    function displayScores() {
+      const scores = JSON.parse(localStorage.getItem("scores")) || [];
+      const board = document.getElementById("leaderboard");
+
+      board.innerHTML = "";
+
+      scores.forEach(score => {
+        const item = document.createElement("li");
+        item.textContent = score.name + " — " + score.coins + " coins";
+        board.appendChild(item);
+      });
+    }
+
+    updateCoins();
+    displayScores();
+  </script>
+
 </body>
 </html>
